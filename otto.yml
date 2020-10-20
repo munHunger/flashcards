@@ -1,0 +1,9 @@
+name: flashcards
+ports:
+  - 5000
+monitoring:
+  port: 4000
+scripts:
+  start: 
+  build:
+  test:
