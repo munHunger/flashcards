@@ -1,0 +1,13 @@
+{
+  "name": "flash",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "nodemon src/main.js"
+  },
+  "devDependencies": {
+    "nodemon": "2.0.4"
+  },
+  "dependencies": {
+    "express": "4.17.1"
+  }
+}
