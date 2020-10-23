@@ -2,8 +2,8 @@ name: flashcards
 ports:
   - 5000
 monitoring:
-  port: 4000
+  port: 4001
 scripts:
-  start: 
-  build:
+  start: "cd server; npm run start monitoring=4001 server=5003"
+  build: "cd client; npm install && npm run build; cd ../server; npm install; cd .."
   test:
