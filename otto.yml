@@ -1,6 +1,6 @@
 name: flashcards
 ports:
-  - 5000
+  - 5003
 monitoring:
   port: 4001
 scripts:
