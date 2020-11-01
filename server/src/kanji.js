@@ -1,7 +1,7 @@
 const fs = require("fs");
 
 let kanji = fs
-  .readFileSync("data/Kanji_20201022_101129.csv", "utf-8")
+  .readFileSync(__dirname + "/../data/Kanji_20201022_101129.csv", "utf-8")
   .split("\n")
   .slice(1)
   .map((row) => {
