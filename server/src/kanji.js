@@ -1,7 +1,14 @@
 const fs = require("fs");
 
+let path = "data";
+
+process.argv.forEach((line) => {
+  if (line.split("=")[0] === "data") path = line.split("=")[1];
+});
+
+path += "/Kanji_20201022_101129.csv";
 let kanji = fs
-  .readFileSync(__dirname + "/../data/Kanji_20201022_101129.csv", "utf-8")
+  .readFileSync(path, "utf-8")
   .split("\n")
   .slice(1)
   .map((row) => {
