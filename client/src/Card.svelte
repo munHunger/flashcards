@@ -1,10 +1,12 @@
 <script>
   import { config, alerts } from "./data";
   let baseurl = "";
-  if ($config.type === "kanji in words") {
+  if ($config.type === "kanji in words" || $config.type === "kanji") {
     window
       .fetch(
-        `${baseurl}/kanji/word?jlpt=${Object.keys($config.JLPT).join(",")}`
+        `${baseurl}/kanji${
+          $config.type === "kanji in words" ? "/word" : ""
+        }?jlpt=${Object.keys($config.JLPT).join(",")}`
       )
       .then(res => res.json())
       .then(list => {

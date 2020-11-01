@@ -4,7 +4,7 @@
   let setup = {
     type: {
       question: "What type of training are we doing",
-      options: ["kanji in words", "hiragana"],
+      options: ["kanji in words", "kanji"],
       onSelect: option => {
         setup.type.selected = option;
         page++;

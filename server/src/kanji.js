@@ -6,9 +6,8 @@ process.argv.forEach((line) => {
   if (line.split("=")[0] === "data") path = line.split("=")[1];
 });
 
-path += "/Kanji_20201022_101129.csv";
 let kanji = fs
-  .readFileSync(path, "utf-8")
+  .readFileSync(path + "/Kanji_20201022_101129.csv", "utf-8")
   .split("\n")
   .slice(1)
   .map((row) => {
@@ -27,17 +26,22 @@ let kanji = fs
     };
   })
   .filter((kanji) => kanji);
-console.log(
-  kanji
-    .map((k) => parseInt(k.jlpt))
-    .filter((v) => v)
-    .reduce((acc, val) => Math.min(acc, val), 999)
-);
 
-console.log(
-  kanji
-    .map((k) => parseInt(k.jlpt))
-    .filter((v) => v)
-    .reduce((acc, val) => Math.max(acc, val), 0)
-);
-module.exports = { kanji };
+let words = fs
+  .readFileSync(path + "/Jukugo_20201022_101219.csv", "utf-8")
+  .split("\n")
+  .slice(1)
+  .map((row) => {
+    let parts = row.split(";");
+    //id;"Comp. Word";Frequency;"Grammatical Feature";Pronunciation;"English Translation";Position;Kanji;KanjiID
+    return {
+      id: parts[0],
+      kanji: parts[1],
+      translation: (parts[5] || "")
+        .match(/[\w\s]*/g)
+        .filter((t) => t.length > 0)
+        .map((translation) => translation.trim()),
+      kanjiId: parts[8],
+    };
+  });
+module.exports = { kanji, words };

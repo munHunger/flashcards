@@ -2,7 +2,7 @@ const express = require("express");
 const { monitoring } = require("otto-lib");
 let { cards } = require("./cards");
 
-let { kanji } = require("./kanji");
+let { kanji, words } = require("./kanji");
 
 let serverPort = 5001;
 let monitoringPort = 4000;
@@ -17,10 +17,22 @@ monitoring.server(monitoringPort).then((monitoring) => {
 
   app.use("", express.static("node_modules/flash-client/public"));
 
-  app.get("/kanji/word", (req, res) => {
+  app.get("/kanji", (req, res) => {
     let jlpt = req.query.jlpt.split(",");
     res.send(
       JSON.stringify(kanji.filter((kanji) => jlpt.indexOf(kanji.jlpt) > -1))
+    );
+  });
+
+  app.get("/kanji/word", (req, res) => {
+    let jlpt = req.query.jlpt.split(",");
+    res.send(
+      JSON.stringify(
+        kanji
+          .filter((kanji) => jlpt.indexOf(kanji.jlpt) > -1)
+          .map((kanji) => words.filter((word) => word.kanjiId === kanji.id))
+          .reduce((acc, val) => acc.concat(val), [])
+      )
     );
   });
 
