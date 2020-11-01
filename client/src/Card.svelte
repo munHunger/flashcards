@@ -1,6 +1,6 @@
 <script>
   import { config, alerts } from "./data";
-  let baseurl = "http://localhost:5002";
+  let baseurl = "";
   if ($config.type === "kanji in words") {
     window
       .fetch(
