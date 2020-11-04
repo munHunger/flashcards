@@ -13,6 +13,9 @@ export const config = writable(storedConf);
 config.subscribe((val) => localStorage.setItem("config", JSON.stringify(val)));
 
 export const alerts = writable([]);
+
+export const selectedCourse = writable();
+
 alerts.subscribe((val) => {
   setTimeout(() => {
     alerts.update((alerts) => {

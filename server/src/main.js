@@ -3,6 +3,7 @@ const { monitoring } = require("otto-lib");
 let { cards } = require("./cards");
 
 let { kanji, words } = require("./kanji");
+let { hiragana } = require("./hiragana");
 
 let serverPort = 5001;
 let monitoringPort = 4000;
@@ -22,6 +23,10 @@ monitoring.server(monitoringPort).then((monitoring) => {
     res.send(
       JSON.stringify(kanji.filter((kanji) => jlpt.indexOf(kanji.jlpt) > -1))
     );
+  });
+
+  app.get("/hiragana", (req, res) => {
+    res.send(JSON.stringify(hiragana));
   });
 
   app.get("/kanji/word", (req, res) => {

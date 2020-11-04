@@ -117,9 +117,6 @@
 </script>
 
 <style>
-  :global(body) {
-    background-color: rgb(46, 49, 51);
-  }
   .card {
     font-size: 15rem;
     color: #287588;
