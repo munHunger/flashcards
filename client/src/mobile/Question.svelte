@@ -95,7 +95,7 @@
     border: none;
     background: none;
     border-radius: 0.2rem;
-    box-shadow: 0 0 0.2rem rgba(0, 0, 0, 0.25);
+    /* box-shadow: inset 0 -0.1rem 0.2rem rgba(0, 0, 0, 0.25); */
     text-align: center;
     margin: 0.2rem;
     color: #333;
@@ -132,7 +132,7 @@
   {:else}{rom}{/if}
   <span slot="bottom">
     {#if writing}
-      <input bind:value={writingInput} on:input={verify} />
+      <input bind:value={writingInput} on:input={verify} autofocus />
     {/if}
   </span>
 </Card>
