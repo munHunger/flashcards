@@ -1,6 +1,15 @@
 <script>
-  export let display, options, leftBased, translation, correct, rom, onNext;
+  import Card from "./Card.svelte";
+  export let display,
+    options,
+    leftBased,
+    translation,
+    correct,
+    rom,
+    onNext,
+    writing;
 
+  let writingInput = "";
   let showAnswer = false;
   let wasCorrect = undefined;
   function selected(option) {
@@ -10,6 +19,24 @@
       setTimeout(() => {
         showAnswer = false;
         wasCorrect = undefined;
+        writingInput = "";
+        onNext(wasCorrect);
+      }, 1000);
+  }
+  function verify() {
+    if (writingInput === " ") {
+      wasCorrect = false;
+      showAnswer = true;
+    }
+    if (writingInput.toLowerCase() === correct.toLowerCase()) {
+      wasCorrect = true;
+      showAnswer = true;
+    }
+    if (onNext && showAnswer)
+      setTimeout(() => {
+        showAnswer = false;
+        wasCorrect = undefined;
+        writingInput = "";
         onNext(wasCorrect);
       }, 1000);
   }
@@ -59,30 +86,53 @@
     color: #555;
     font-size: 0.7rem;
   }
+
+  input:active {
+    outline: none;
+  }
+  input {
+    outline: none;
+    border: none;
+    background: none;
+    border-radius: 0.2rem;
+    box-shadow: 0 0 0.2rem rgba(0, 0, 0, 0.25);
+    text-align: center;
+    margin: 0.2rem;
+    color: #333;
+  }
 </style>
 
-{#if translation}
-  <div class="translation">{translation}</div>
-{/if}
-
-<div class="question">
-  {#if leftBased}
-    <span
-      class="underscore {wasCorrect ? 'correct' : wasCorrect == undefined ? '' : 'wrong'}">
-      {#if showAnswer}{correct}{:else}&nbsp;{/if}
-    </span>
+<Card>
+  {#if translation}
+    <div class="translation">{translation}</div>
   {/if}
-  {display}
-  {#if !leftBased}
-    <span
-      class="underscore {wasCorrect ? 'correct' : wasCorrect == undefined ? '' : 'wrong'}">
-      {#if showAnswer}{correct}{:else}&nbsp;{/if}
-    </span>
-  {/if}
-</div>
 
-{#if !showAnswer}
-  {#each options || [] as option}
-    <button on:click={() => selected(option)}>{option}</button>
-  {/each}
-{:else}{rom}{/if}
+  <div class="question">
+    {#if leftBased}
+      <span
+        class="underscore {wasCorrect ? 'correct' : wasCorrect == undefined ? '' : 'wrong'}">
+        {#if showAnswer}{correct}{:else}&nbsp;{/if}
+      </span>
+    {/if}
+    {display}
+    {#if !leftBased}
+      <span
+        class="underscore {wasCorrect ? 'correct' : wasCorrect == undefined ? '' : 'wrong'}">
+        {#if showAnswer}{correct}{:else}&nbsp;{/if}
+      </span>
+    {/if}
+  </div>
+
+  {#if !showAnswer}
+    {#if !writing}
+      {#each options || [] as option}
+        <button on:click={() => selected(option)}>{option}</button>
+      {/each}
+    {/if}
+  {:else}{rom}{/if}
+  <span slot="bottom">
+    {#if writing}
+      <input bind:value={writingInput} on:input={verify} />
+    {/if}
+  </span>
+</Card>

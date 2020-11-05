@@ -8,6 +8,7 @@
   import CourseSelect from "./CourseSelect.svelte";
   import Hiragana from "./courses/Hiragana.svelte";
   import Katakana from "./courses/Katakana.svelte";
+  import KatakanaWords from "./courses/KatakanaWords.svelte";
   import { config, selectedCourse, alerts } from "../data";
   import { shuffle, unique } from "../util";
   let baseurl = "";
@@ -120,15 +121,15 @@
   <div class="wrapper" in:receive={{ key: 'course', out: false }}>
     <div class="header" />
     <Divider top="rgb(54, 31, 55)" bottom="rgb(61, 38, 63)">
-      <Card>
-        {#if $selectedCourse.name === 'hiragana'}
-          <Hiragana />
-        {:else if $selectedCourse.name === 'katakana'}
-          <Katakana />
-        {:else}
-          <Question {...active} onNext={() => nextWord()} />
-        {/if}
-      </Card>
+      {#if $selectedCourse.name === 'hiragana'}
+        <Hiragana />
+      {:else if $selectedCourse.name === 'katakana'}
+        <Katakana />
+      {:else if $selectedCourse.name === 'katakana words'}
+        <KatakanaWords />
+      {:else}
+        <Question {...active} onNext={() => nextWord()} />
+      {/if}
     </Divider>
     <Divider top="rgb(61, 38, 63)" bottom="rgb(67, 49, 68)" />
     <div class="bottom">

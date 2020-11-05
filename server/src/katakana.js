@@ -22,8 +22,8 @@ let katakanaWords = fs
   .map((line) => {
     let parts = line.split(";");
     return {
-      jp: parts[1],
-      rom: parts[0],
+      jp: parts[0],
+      rom: parts[1],
     };
   });
 

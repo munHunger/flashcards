@@ -7,6 +7,7 @@
   let courses = [
     { name: "hiragana", desc: "ひらがな to romanji" },
     { name: "katakana", desc: "カタカナ to romanji" },
+    { name: "katakana words", desc: "カタカナ to romanji" },
     { name: "kanji words", desc: "kanji combinations" }
   ];
 

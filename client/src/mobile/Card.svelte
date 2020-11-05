@@ -35,5 +35,6 @@
   </div>
   <div class="buttons">
     <i class="far fa-bookmark" />
+    <slot name="bottom" />
   </div>
 </div>
