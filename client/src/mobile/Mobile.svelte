@@ -7,6 +7,7 @@
   import Card from "./Card.svelte";
   import CourseSelect from "./CourseSelect.svelte";
   import Hiragana from "./courses/Hiragana.svelte";
+  import Katakana from "./courses/Katakana.svelte";
   import { config, selectedCourse, alerts } from "../data";
   import { shuffle, unique } from "../util";
   let baseurl = "";
@@ -14,7 +15,7 @@
   let active = {};
   let startLength = 0;
   window
-    .fetch(`${baseurl}/kanji/word?jlpt=3`)
+    .fetch(`${baseurl}/kanji/word?jlpt=5`)
     .then(res => res.json())
     .then(res => {
       list = shuffle(res);
@@ -122,6 +123,8 @@
       <Card>
         {#if $selectedCourse.name === 'hiragana'}
           <Hiragana />
+        {:else if $selectedCourse.name === 'katakana'}
+          <Katakana />
         {:else}
           <Question {...active} onNext={() => nextWord()} />
         {/if}

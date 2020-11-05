@@ -4,6 +4,7 @@ let { cards } = require("./cards");
 
 let { kanji, words } = require("./kanji");
 let { hiragana } = require("./hiragana");
+let { katakana, katakanaWords } = require("./katakana");
 
 let serverPort = 5001;
 let monitoringPort = 4000;
@@ -28,6 +29,12 @@ monitoring.server(monitoringPort).then((monitoring) => {
   app.get("/hiragana", (req, res) => {
     res.send(JSON.stringify(hiragana));
   });
+  app.get("/katakana", (req, res) => {
+    res.send(JSON.stringify(katakana));
+  });
+  app.get("/katakana/words", (req, res) => {
+    res.send(JSON.stringify(katakanaWords));
+  });
 
   app.get("/kanji/word", (req, res) => {
     let jlpt = req.query.jlpt.split(",");
@@ -35,7 +42,24 @@ monitoring.server(monitoringPort).then((monitoring) => {
       JSON.stringify(
         kanji
           .filter((kanji) => jlpt.indexOf(kanji.jlpt) > -1)
-          .map((kanji) => words.filter((word) => word.kanjiId === kanji.id))
+          .map((k) =>
+            words
+              .filter((word) => word.kanjiId === k.id)
+              .map((word) => ({
+                ...word,
+                other:
+                  word.position === "L"
+                    ? word.kanji.substring(1)
+                    : word.kanji.substring(0, 1),
+              }))
+              .map((word) => ({
+                ...word,
+                other: kanji.find((k) => k.kanji === word.other),
+              }))
+              .filter(
+                (word) => word.other && jlpt.indexOf(word.other.jlpt) > -1
+              )
+          )
           .reduce((acc, val) => acc.concat(val), [])
       )
     );
