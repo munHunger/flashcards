@@ -1,0 +1,31 @@
+format
+    {x}は{y}です;{x}wa{y}desu;{x} is {y}
+    {x}は{x}でした;{x}wa{x}deshita;{x} was {x}
+
+x
+    いぬ;inu;dog
+    ねこ;neko;cat
+    いす;isu;chair
+    ほん;hon;book
+    がくせい;gakusei;student
+    きりん;kirin;giraffe
+    わたし;watashi;I
+    せんせい;sensei;teacher
+    はな;hana;flower
+    ぬいぐるみ;nuigurumi;plushie
+    ぶた;buta;pig
+    こども;kodomo;kid
+
+y
+    かわいい;kawaii;cute
+    たかい;takai;expensive|tall
+    やすい;yasui;cheap
+    ひどい;hidoi;awful|cruel
+    おおきい;ookii;big
+    つよい;tsuyoi;strong
+    すごい;sugoi;amazing
+    うつくしい;utsukushii;beautiful
+    なまいき;namaiki;cheeky
+    みどり;midori;green
+    げんき;genki;healthy
+    やさしい;yasashii;nice|easy

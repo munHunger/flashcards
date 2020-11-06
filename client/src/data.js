@@ -9,6 +9,9 @@ if (storedConf) {
     storedConf = JSON.parse(storedConf);
   }
 }
+
+export const page = writable({ page: "course-select" });
+
 export const config = writable(storedConf);
 config.subscribe((val) => localStorage.setItem("config", JSON.stringify(val)));
 

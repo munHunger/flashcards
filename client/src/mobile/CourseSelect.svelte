@@ -2,17 +2,18 @@
   import { quintOut } from "svelte/easing";
   import { crossfade } from "svelte/transition";
 
-  import { selectedCourse } from "../data";
+  import { page } from "../data";
 
   let courses = [
     { name: "hiragana", desc: "ひらがな to romanji" },
     { name: "katakana", desc: "カタカナ to romanji" },
     { name: "katakana words", desc: "カタカナ to romanji" },
+    { name: "grammar 1", desc: "わたしはがくせいです" },
     { name: "kanji words", desc: "kanji combinations" }
   ];
 
   function select(course) {
-    selectedCourse.set(course);
+    page.set({ page: "course", course: course });
   }
 
   const [send, receive] = crossfade({

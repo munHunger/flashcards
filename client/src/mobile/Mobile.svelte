@@ -2,6 +2,8 @@
   import { quintOut } from "svelte/easing";
   import { crossfade } from "svelte/transition";
   import ProgressBar from "./ProgressBar.svelte";
+  import Head from "./Head.svelte";
+  import Profile from "./Profile.svelte";
   import Question from "./Question.svelte";
   import Divider from "../Divider.svelte";
   import Card from "./Card.svelte";
@@ -9,7 +11,8 @@
   import Hiragana from "./courses/Hiragana.svelte";
   import Katakana from "./courses/Katakana.svelte";
   import KatakanaWords from "./courses/KatakanaWords.svelte";
-  import { config, selectedCourse, alerts } from "../data";
+  import Grammar from "./courses/Grammar.svelte";
+  import { config, page, selectedCourse, alerts } from "../data";
   import { shuffle, unique } from "../util";
   let baseurl = "";
   let list = [];
@@ -90,11 +93,6 @@
     width: 100%;
   }
 
-  .header {
-    background-color: rgb(54, 31, 55);
-    flex: 1 1 auto;
-  }
-
   .bottom {
     background-color: rgb(67, 49, 68);
     min-height: 50px;
@@ -108,18 +106,65 @@
     margin: 1rem;
     padding: 2rem;
   }
+
+  .page-wrapper {
+    position: relative;
+    flex: 1 1 auto;
+    box-sizing: content-box;
+  }
+
+  .page {
+    width: 100%;
+    position: absolute;
+    display: inline-grid;
+  }
 </style>
 
-{#if !$selectedCourse}
+<div class="wrapper">
+  <Head />
+  <div class="page-wrapper">
+    {#if $page.page === 'course-select'}
+      <div class="page" out:receive={{ key: $page.page, out: true }}>
+        <Divider top="rgb(54, 31, 55)" bottom="#eee">
+          <CourseSelect />
+        </Divider>
+      </div>
+    {:else if $page.page === 'course'}
+      <div class="page" in:receive={{ key: $page.page, out: false }}>
+        <Divider top="rgb(54, 31, 55)" bottom="rgb(61, 38, 63)">
+          {#if $page.course.name === 'hiragana'}
+            <Hiragana />
+          {:else if $page.course.name === 'katakana'}
+            <Katakana />
+          {:else if $page.course.name === 'katakana words'}
+            <KatakanaWords />
+          {:else if $page.course.name === 'grammar 1'}
+            <Grammar />
+          {:else}
+            <Question {...active} onNext={() => nextWord()} />
+          {/if}
+        </Divider>
+      </div>
+    {:else if $page.page === 'profile'}
+      <div class="page" in:receive={{ key: $page.page, out: false }}>
+        <Divider top="rgb(54, 31, 55)" bottom="#eee">
+          <Profile />
+        </Divider>
+      </div>
+    {/if}
+  </div>
+</div>
+
+<!-- {#if !$selectedCourse}
   <div class="wrapper" out:send={{ key: 'courseSelect', out: true }}>
-    <div class="header" />
+    <Head />
     <Divider top="rgb(54, 31, 55)" bottom="#eee">
       <CourseSelect />
     </Divider>
   </div>
 {:else}
   <div class="wrapper" in:receive={{ key: 'course', out: false }}>
-    <div class="header" />
+    <Head />
     <Divider top="rgb(54, 31, 55)" bottom="rgb(61, 38, 63)">
       {#if $selectedCourse.name === 'hiragana'}
         <Hiragana />
@@ -141,4 +186,4 @@
       </div>
     </div>
   </div>
-{/if}
+{/if} -->

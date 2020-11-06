@@ -38,10 +38,7 @@ let words = fs
       id: parts[0],
       kanji: parts[1],
       romanji: parts[4],
-      translation: (parts[5] || "")
-        .match(/[\w\s]*/g)
-        .filter((t) => t.length > 0)
-        .map((translation) => translation.trim()),
+      translation: (parts[5] || "").trim(),
       position: parts[6],
       kanjiId: parts[8],
     };

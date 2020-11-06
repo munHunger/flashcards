@@ -12,6 +12,15 @@
   let writingInput = "";
   let showAnswer = false;
   let wasCorrect = undefined;
+
+  function clicked() {
+    if (showAnswer) {
+      showAnswer = false;
+      wasCorrect = undefined;
+      writingInput = "";
+      onNext(wasCorrect);
+    }
+  }
   function selected(option) {
     showAnswer = true;
     wasCorrect = option === correct;
@@ -32,13 +41,6 @@
       wasCorrect = true;
       showAnswer = true;
     }
-    if (onNext && showAnswer)
-      setTimeout(() => {
-        showAnswer = false;
-        wasCorrect = undefined;
-        writingInput = "";
-        onNext(wasCorrect);
-      }, 1000);
   }
 </script>
 
@@ -107,7 +109,7 @@
     <div class="translation">{translation}</div>
   {/if}
 
-  <div class="question">
+  <div class="question" on:click={clicked}>
     {#if leftBased}
       <span
         class="underscore {wasCorrect ? 'correct' : wasCorrect == undefined ? '' : 'wrong'}">
