@@ -52,9 +52,9 @@ function generate() {
     [...temp.matchAll(/{.+?}/gm)]
       .map((v) => new String(v))
       .forEach((v) => {
-        let key = v.substring(1, v.length - 1);
-        dict[key] = dict[key] || shuffle(lang[key])[0];
-        temp = temp.replace(new RegExp(v, "g"), selector(dict[key]));
+        let key = v.substring(1, v.length - 1).split(":");
+        dict[key[0]] = dict[key[0]] || shuffle(lang[key[1]])[0];
+        temp = temp.replace(new RegExp(v, "g"), selector(dict[key[0]]));
       });
     return temp;
   }
@@ -68,7 +68,7 @@ function generate() {
   };
   return format;
 }
-
+console.log(generate());
 module.exports = {
   generate: (count) => new Array(count).fill(0).map((_) => generate()),
 };

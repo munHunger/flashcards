@@ -1,6 +1,6 @@
 format
-    {x}は{y}です;{x}wa{y}desu;{x} is {y}
-    {x}は{x}でした;{x}wa{x}deshita;{x} was {x}
+    {x:x}は{y:y}です;{x:x} wa {y:y} desu;{x:x} is {y:y}
+    {x:x}は{y:x}でした;{x:x} wa {y:x} deshita;{x:x} was {y:x}
 
 x
     いぬ;inu;dog

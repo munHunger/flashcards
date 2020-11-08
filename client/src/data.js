@@ -1,21 +1,38 @@
 import { subscribe } from "svelte/internal";
 import { writable } from "svelte/store";
 
-let storedConf = localStorage.getItem("config");
-if (storedConf) {
-  if (storedConf === "undefined") {
-    storedConf = undefined;
-  } else {
-    storedConf = JSON.parse(storedConf);
+function readOrDefault(name, orElse) {
+  let stored = localStorage.getItem(name);
+  if (stored) {
+    if (stored === "undefined") {
+      return orElse;
+    } else {
+      return JSON.parse(stored);
+    }
   }
 }
 
-export const page = writable({ page: "course-select" });
+export const kanji = writable({
+  本: { known: false, rom: "hon" },
+  日: { known: true },
+  人: { known: true },
+  先: { known: false },
+  月: { known: false },
+});
 
-export const config = writable(storedConf);
+export const page = writable({ page: "profile" });
+
+export const config = writable(readOrDefault("config", undefined));
 config.subscribe((val) => localStorage.setItem("config", JSON.stringify(val)));
 
 export const alerts = writable([]);
+
+export const profile = writable(readOrDefault("profile", {}));
+profile.subscribe((val) => {
+  console.log("writing to profile storage");
+  console.log(val);
+  localStorage.setItem("profile", JSON.stringify(val));
+});
 
 export const selectedCourse = writable();
 

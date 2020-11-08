@@ -1,6 +1,6 @@
 <script>
-  import { page } from "../data";
-  function profile() {
+  import { page, profile } from "../data";
+  function navToProfile() {
     page.set({ page: "profile" });
   }
 </script>
@@ -27,15 +27,17 @@
     display: flex;
     justify-content: flex-end;
   }
+  .username {
+    margin-top: 1rem;
+    color: #ec5f3c;
+  }
 </style>
 
 <div class="header">
   <div class="right">
-
-    <div class="avatar" on:click={profile}>
-      <img
-        src="/avatars/64_{Math.floor(Math.random() * 16)}.png"
-        alt="avatar" />
+    <div class="username">{($profile || {}).username}</div>
+    <div class="avatar" on:click={navToProfile}>
+      <img src="/avatars/64_{($profile || {}).avatar || 1}.png" alt="avatar" />
     </div>
   </div>
 </div>
