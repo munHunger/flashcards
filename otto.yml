@@ -4,6 +4,6 @@ ports:
 monitoring:
   port: 4001
 scripts:
-  start: "cd server; npm run start monitoring=4001 server=5003 data=/opt/otto/flashcards/server/data"
+  start: "cd server; npm run start monitoring=4001 server=5003 data=/opt/otto/flashcards/server/data user=/opt/flashcards"
   build: "cd client; npm install && npm run build; cd ../server; npm install; cd .."
   test:

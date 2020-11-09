@@ -46,21 +46,28 @@ function permutation(lists, acc = [""]) {
   return permutation([lists[0]], permutation(lists.slice(1), acc));
 }
 
+function newUser(name) {
+  return { username: name, words: [], courses: [] };
+}
+
 function getUser(name) {
   let path = "data";
 
   process.argv.forEach((line) => {
-    if (line.split("=")[0] === "data") path = line.split("=")[1];
+    if (line.split("=")[0] === "user") path = line.split("=")[1];
   });
   path += `/users/${name}.json`;
-  return JSON.parse(fs.readFileSync(path, "utf-8"));
+  if (fs.existsSync(path)) return JSON.parse(fs.readFileSync(path, "utf-8"));
+  let user = newUser(name);
+  saveUser(user);
+  return user;
 }
 
 function saveUser(user) {
   let path = "data";
 
   process.argv.forEach((line) => {
-    if (line.split("=")[0] === "data") path = line.split("=")[1];
+    if (line.split("=")[0] === "user") path = line.split("=")[1];
   });
   path += `/users/${user.username}.json`;
   fs.writeFileSync(path, JSON.stringify(user, null, 2), "utf-8");
