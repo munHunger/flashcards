@@ -40,6 +40,24 @@
       console.log("well done");
       server.saveCourse($course);
       course.set(null);
+    } else {
+      let question = $course.questions[currentIndex];
+      let words = question.words;
+      words.forEach(word => {
+        if (!word.progress) {
+          sendAlert(
+            "This is a new word for " + jpToRom
+              ? question.translations[0]
+              : question.jp,
+            "info"
+          );
+        } else if (
+          word.progress.hiragana.attempts > 1 &&
+          word.progress.hiragana.pass / word.progress.hiragana.attempts < 0.25
+        ) {
+          sendAlert("This is a hard one", "warning");
+        }
+      });
     }
   }
 </script>

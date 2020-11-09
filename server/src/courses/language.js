@@ -85,7 +85,18 @@ let rest = {
       }));
   },
   practice: (course, user) => {
-    return new Array(15).fill(0).map((_) => generate(course.language));
+    let words = course.rest.words(course, user);
+    console.log(words);
+    return new Array(15)
+      .fill(0)
+      .map((_) => generate(course.language))
+      .map((test) => {
+        test.words = test.words.map((word) => ({
+          ...word,
+          ...words.find((w) => w.rom === word.rom),
+        }));
+        return test;
+      });
   },
   updateUser: (_, user, results) => {
     let course = user.courses.find(
@@ -134,8 +145,8 @@ let rest = {
 
     return user;
   },
-  test: (course) => {
-    return new Array(15).fill(0).map((_) => generate(course.language));
+  test: (course, user) => {
+    return course.rest.practice(course, user); //TODO: this sucks
   },
 };
 let courses = (user) => [
