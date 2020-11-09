@@ -20,25 +20,30 @@ function shuffle(array) {
   return array;
 }
 
-function expandTemplate(temp, lang, selector, dict = {}) {
-  [...temp.matchAll(/{.+?}/gm)]
-    .map((v) => new String(v))
-    .forEach((v) => {
-      let key = v.substring(1, v.length - 1).split(":");
-      let lookup = shuffle(
-        (key[1] || "")
-          .split("|")
-          .map((part) => lang[part])
-          .reduce((acc, val) => acc.concat(val), [])
-      )[0];
-      dict[key[0]] = dict[key[0]] || lookup;
-      key = [...v.matchAll(/(?<={).+?(?=(}|:))/g)][0][0];
-      temp = temp.replace(
-        new RegExp(`{${key}(.*?)}`, "g"),
-        selector(dict[key[0]])
-      );
-    });
-  return temp;
+function expandTemplate(temp, lang, dict = {}) {
+  let parts = temp.split(/{|}/).map((part, index) => {
+    if (index % 2 === 0) return part;
+    let key = part.split(":");
+    let lookup = shuffle(
+      (key[1] || "")
+        .split("|")
+        .map((part) => lang[part])
+        .reduce((acc, val) => acc.concat(val), [])
+    )[0];
+    dict[key[0]] = dict[key[0]] || lookup;
+    return dict[key[0]];
+  });
+  return parts;
+}
+
+function permutation(lists, acc = [""]) {
+  if (lists.length === 0) return;
+  if (lists.length === 1) {
+    return lists[0]
+      .map((val) => acc.map((other) => val + other))
+      .reduce((acc, val) => acc.concat(val), []);
+  }
+  return permutation([lists[0]], permutation(lists.slice(1), acc));
 }
 
 function getUser(name) {
@@ -61,4 +66,4 @@ function saveUser(user) {
   fs.writeFileSync(path, JSON.stringify(user, null, 2), "utf-8");
 }
 
-module.exports = { shuffle, expandTemplate, getUser, saveUser };
+module.exports = { shuffle, expandTemplate, getUser, saveUser, permutation };

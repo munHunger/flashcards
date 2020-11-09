@@ -5,7 +5,7 @@
 
   let isWritingPrompt = true;
   let input = "";
-  let jpToRom = false;
+  let jpToRom = Math.random() > 0.5;
 
   let showAnswer = false;
 
@@ -64,24 +64,23 @@
 {#if $course}
   <div class="progress">{currentIndex}/{$course.questions.length}</div>
   <div class="ui centered grid">
-    <div class="ui row">
-      <h2 class="ui header">
-        {#if jpToRom}
-          {$course.questions[currentIndex].jp}
-        {:else}{$course.questions[currentIndex].translations[0]}{/if}
-      </h2>
-    </div>
 
     {#if showAnswer}
-      {#if jpToRom}
-        {$course.questions[currentIndex].translations[0]}
-      {:else}
-        <div class="ui row">
-          <h3 class="ui header">{$course.questions[currentIndex].jp}</h3>
-        </div>
-        <div class="ui row">{$course.questions[currentIndex].rom}</div>
-      {/if}
+      <div class="ui row">
+        <h3 class="ui header">{$course.questions[currentIndex].jp}</h3>
+      </div>
+      <div class="ui row">
+        {$course.questions[currentIndex].translations.join(', ')}
+      </div>
+      <div class="ui row">{$course.questions[currentIndex].rom}</div>
     {:else}
+      <div class="ui row">
+        <h2 class="ui header">
+          {#if jpToRom}
+            {$course.questions[currentIndex].jp}
+          {:else}{$course.questions[currentIndex].translations.join(', ')}{/if}
+        </h2>
+      </div>
       <div class="ui row transparent input">
         <input
           type="text"

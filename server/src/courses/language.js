@@ -1,5 +1,11 @@
 const fs = require("fs");
-const { shuffle, expandTemplate, saveUser, getUser } = require("./util");
+const {
+  shuffle,
+  expandTemplate,
+  saveUser,
+  getUser,
+  permutation,
+} = require("./util");
 let path = "data";
 
 process.argv.forEach((line) => {
@@ -33,19 +39,33 @@ function generate(lang) {
 
   let dict = {};
   format = {
-    jp: expandTemplate(format.jp, lang, (word) => word.jp, dict),
-    rom: expandTemplate(format.rom, lang, (word) => word.rom, dict),
-    translations: format.translations.map((t) =>
-      expandTemplate(t, lang, (word) => shuffle(word.translations)[0], dict)
+    jp: expandTemplate(format.jp, lang, dict).reduce(
+      (acc, val) => acc + (val.jp || val),
+      ""
+    ),
+    rom: expandTemplate(format.rom, lang, dict).reduce(
+      (acc, val) => acc + (val.rom || val),
+      ""
+    ),
+    translations: shuffle(
+      format.translations
+        .map((t) =>
+          permutation(
+            expandTemplate(t, lang, dict).map(
+              (part) => part.translations || [part]
+            )
+          )
+        )
+        .reduce((acc, val) => acc.concat(val), [])
     ),
     words: Object.values(dict),
   };
   return format;
 }
 
-function calcKnowledge(user) {
+function calcKnowledge(user, courseName) {
   let progress = (
-    user.courses.find((course) => course.name === "First grammar course") || {}
+    user.courses.find((course) => course.name === courseName) || {}
   ).progress;
   if (!progress) return undefined;
   let rate = progress.practice.pass / progress.practice.attempts;
@@ -53,79 +73,85 @@ function calcKnowledge(user) {
   if (rate > 0.5) return "moderate";
   return "poor";
 }
+let rest = {
+  words: (course, user) => {
+    return Object.keys(course.language)
+      .filter((key) => key !== "format")
+      .map((key) => course.language[key])
+      .reduce((acc, val) => acc.concat(val), [])
+      .map((word) => ({
+        ...word,
+        ...user.words.find((w) => w.rom === word.rom),
+      }));
+  },
+  practice: (course, user) => {
+    return new Array(15).fill(0).map((_) => generate(course.language));
+  },
+  updateUser: (_, user, results) => {
+    let course = user.courses.find(
+      (course) => course.name === "First grammar course"
+    );
+    if (!course) {
+      course = {
+        name: "First grammar course",
+        progress: {
+          practice: {
+            pass: 0,
+            attempts: 0,
+          },
+        },
+      };
+      user.courses.push(course);
+    }
 
-let courses = (user) => [
-  {
-    name: "First grammar course",
-    description: "Learn basic grammar on the format {x is/was y}",
-    knowledge: calcKnowledge(user),
-    language: readLanguage(path + "/grammar1.lang"),
-    rest: {
-      words: (course, user) => {
-        return Object.keys(course.language)
-          .filter((key) => key !== "format")
-          .map((key) => course.language[key])
-          .reduce((acc, val) => acc.concat(val), [])
-          .map((word) => ({
-            ...word,
-            ...user.words.find((w) => w.rom === word.rom),
-          }));
-      },
-      practice: (course, user) => {
-        return new Array(15).fill(0).map((_) => generate(course.language));
-      },
-      updateUser: (_, user, results) => {
-        let course = user.courses.find(
-          (course) => course.name === "First grammar course"
-        );
-        if (!course) {
-          course = {
-            name: "First grammar course",
+    let success = results.filter((r) => r.success).length;
+    course.progress.practice.pass += success / results.length >= 0.75 ? 1 : 0;
+    course.progress.practice.attempts += 1;
+
+    results.forEach((res) => {
+      res.words.forEach((word) => {
+        let known = user.words.find((known) => known.rom === word.rom);
+        if (!known) {
+          known = {
+            jp: word.jp,
+            rom: word.rom,
+            translations: word.translations,
             progress: {
-              practice: {
+              hiragana: {
                 pass: 0,
                 attempts: 0,
               },
             },
           };
-          user.courses.push(course);
+          user.words.push(known);
         }
+        known.progress.hiragana.pass += res.success ? 1 : 0;
+        known.progress.hiragana.attempts += 1;
+      });
+    });
 
-        let success = results.filter((r) => r.success).length;
-        course.progress.practice.pass +=
-          success / results.length >= 0.75 ? 1 : 0;
-        course.progress.practice.attempts += 1;
+    saveUser(user);
 
-        results.forEach((res) => {
-          res.words.forEach((word) => {
-            let known = user.words.find((known) => known.rom === word.rom);
-            if (!known) {
-              known = {
-                jp: word.jp,
-                rom: word.rom,
-                translations: word.translations,
-                progress: {
-                  hiragana: {
-                    pass: 0,
-                    attempts: 0,
-                  },
-                },
-              };
-              user.words.push(known);
-            }
-            known.progress.hiragana.pass += res.success ? 1 : 0;
-            known.progress.hiragana.attempts += 1;
-          });
-        });
-
-        saveUser(user);
-
-        return user;
-      },
-      test: (course) => {
-        return new Array(15).fill(0).map((_) => generate(course.language));
-      },
-    },
+    return user;
+  },
+  test: (course) => {
+    return new Array(15).fill(0).map((_) => generate(course.language));
+  },
+};
+let courses = (user) => [
+  {
+    name: "First grammar course",
+    description: "Learn basic grammar on the format {x is/was y}",
+    knowledge: calcKnowledge(user, "First grammar course"),
+    language: readLanguage(path + "/grammar1.lang"),
+    rest,
+  },
+  {
+    name: "Kanji 1",
+    description: "The beggining of a new world of kanji and moon runes",
+    knowledge: calcKnowledge(user, "Kanji1"),
+    language: readLanguage(path + "/kanji1.lang"),
+    rest,
   },
 ];
 
