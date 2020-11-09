@@ -1,35 +1,30 @@
 <script>
-  import Setup from "./Setup.svelte";
-  import Card from "./Card.svelte";
-  import Alert from "./Alert.svelte";
-  import Divider from "./Divider.svelte";
-  import MediaQuery from "./MediaQuery.svelte";
-  import Mobile from "./mobile/Mobile.svelte";
-  import { config } from "./data";
+  import Onboarding from "./Onboarding.svelte";
+  import Courses from "./Courses.svelte";
+  import Course from "./Course.svelte";
+  import Message from "./Message.svelte";
+  import { username, course } from "./data";
 </script>
 
 <style>
   :global(html, body) {
     height: 100%;
-    background-color: rgb(61, 38, 63);
+    background-color: #fff;
     padding: 0px;
     margin: 0px;
     font-family: "Poppins", sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 </style>
 
-<MediaQuery query="(min-width: 481px)" let:matches>
-  {#if matches}
-    {#if !$config}
-      <Setup />
-    {:else}
-      <Card />
-    {/if}
-  {/if}
-</MediaQuery>
-<MediaQuery query="(max-width: 480px)" let:matches>
-  {#if matches}
-    <Mobile />
-  {/if}
-</MediaQuery>
-<Alert />
+{#if !$username}
+  <Onboarding />
+{:else if !$course}
+  <Courses />
+{:else}
+  <Course />
+{/if}
+
+<Message />

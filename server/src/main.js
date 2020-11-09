@@ -5,7 +5,7 @@ let { cards } = require("./cards");
 let { kanji, words } = require("./kanji");
 let { hiragana } = require("./hiragana");
 let { katakana, katakanaWords } = require("./katakana");
-let { generate } = require("./language");
+let courses = require("./courses");
 let serverPort = 5001;
 let monitoringPort = 4000;
 process.argv.forEach((line) => {
@@ -19,15 +19,13 @@ monitoring.server(monitoringPort).then((monitoring) => {
 
   app.use("", express.static("node_modules/flash-client/public"));
 
+  courses.init(app);
+
   app.get("/kanji", (req, res) => {
     let jlpt = req.query.jlpt.split(",");
     res.send(
       JSON.stringify(kanji.filter((kanji) => jlpt.indexOf(kanji.jlpt) > -1))
     );
-  });
-
-  app.get("/language", (req, res) => {
-    res.send(JSON.stringify(generate(parseInt(req.query.size))));
   });
 
   app.get("/hiragana", (req, res) => {

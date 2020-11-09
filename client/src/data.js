@@ -1,4 +1,4 @@
-import { subscribe } from "svelte/internal";
+import { identity, subscribe } from "svelte/internal";
 import { writable } from "svelte/store";
 
 function readOrDefault(name, orElse) {
@@ -12,35 +12,37 @@ function readOrDefault(name, orElse) {
   }
 }
 
-export const kanji = writable({
-  本: { known: false, rom: "hon" },
-  日: { known: true },
-  人: { known: true },
-  先: { known: false },
-  月: { known: false },
-});
+export const page = writable({ page: "home" });
 
-export const page = writable({ page: "profile" });
+let user = localStorage.getItem("username");
+user = user === "undefined" || user === "null" ? undefined : user;
+export const username = writable(user);
+username.subscribe((val) => localStorage.setItem("username", val));
 
-export const config = writable(readOrDefault("config", undefined));
-config.subscribe((val) => localStorage.setItem("config", JSON.stringify(val)));
+export const courses = writable([]);
+
+export const course = writable();
 
 export const alerts = writable([]);
-
-export const profile = writable(readOrDefault("profile", {}));
-profile.subscribe((val) => {
-  console.log("writing to profile storage");
-  console.log(val);
-  localStorage.setItem("profile", JSON.stringify(val));
+alerts.subscribe((a) => {
+  if (a.length > 0) {
+    setTimeout(
+      () =>
+        alerts.update((alerts) => {
+          alerts.shift();
+          return alerts;
+        }),
+      1500
+    );
+  }
 });
-
-export const selectedCourse = writable();
-
-alerts.subscribe((val) => {
-  setTimeout(() => {
-    alerts.update((alerts) => {
-      alerts.shift();
-      return alerts;
-    });
-  }, 10000);
-});
+export function sendAlert(message, type) {
+  alerts.update((alert) => alert.concat({ message, type }));
+}
+export default {
+  courses,
+  username,
+  page,
+  course,
+  alerts,
+};

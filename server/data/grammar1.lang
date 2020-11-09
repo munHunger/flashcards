@@ -1,8 +1,8 @@
 format
-    {x:x}は{y:y}です;{x:x} wa {y:y} desu;{x:x} is {y:y}
-    {x:x}は{y:x}でした;{x:x} wa {y:x} deshita;{x:x} was {y:x}
+    {x:Noun}は{y:Noun|IAdj|NaAdj}です;{x} wa {y} desu;{x} is {y}
+    {x:Noun}は{y:Noun|NaAdj}でした;{x} wa {y} deshita;{x} was {y}
 
-x
+Noun
     いぬ;inu;dog
     ねこ;neko;cat
     いす;isu;chair
@@ -15,8 +15,11 @@ x
     ぬいぐるみ;nuigurumi;plushie
     ぶた;buta;pig
     こども;kodomo;kid
+    ほんだな;hondana;bookcase
+    でんしゃ;densha;train
+    たてもの;tatemono;building
 
-y
+IAdj
     かわいい;kawaii;cute
     たかい;takai;expensive|tall
     やすい;yasui;cheap
@@ -25,7 +28,9 @@ y
     つよい;tsuyoi;strong
     すごい;sugoi;amazing
     うつくしい;utsukushii;beautiful
-    なまいき;namaiki;cheeky
-    みどり;midori;green
-    げんき;genki;healthy
     やさしい;yasashii;nice|easy
+
+NaAdj
+    なまいき;namaiki;cheeky
+    げんき;genki;healthy
+    おおきい;ookii;big
