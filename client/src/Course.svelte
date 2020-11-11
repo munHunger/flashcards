@@ -3,6 +3,8 @@
   import server from "./server";
   let currentIndex = 0;
 
+  let currentTime, paused;
+
   let isWritingPrompt = true;
   let input = "";
   let jpToRom = Math.random() > 0.5;
@@ -27,7 +29,7 @@
         input.toLowerCase().trim();
     }
     $course.questions[currentIndex].success = correct;
-
+    playAudio();
     sendAlert(correct ? "correct" : "wrong", correct ? "positive" : "negative");
   }
 
@@ -60,6 +62,11 @@
       });
     }
   }
+
+  function playAudio() {
+    currentTime = 0;
+    paused = false;
+  }
 </script>
 
 <style>
@@ -82,6 +89,13 @@
 {#if $course}
   <div class="progress">{currentIndex}/{$course.questions.length}</div>
   <div class="ui centered grid">
+
+    <audio
+      bind:currentTime
+      bind:paused
+      src="/voice/{$course.questions[currentIndex].rom}.mp3">
+      <track kind="captions" />
+    </audio>
 
     {#if showAnswer}
       <div class="ui row">

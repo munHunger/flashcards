@@ -1,5 +1,6 @@
 import { identity, subscribe } from "svelte/internal";
 import { writable } from "svelte/store";
+import server from "./server";
 
 function readOrDefault(name, orElse) {
   let stored = localStorage.getItem(name);
@@ -23,6 +24,11 @@ export const courses = writable([]);
 
 export const course = writable();
 
+export const settings = writable();
+settings.subscribe((val) => {
+  if (val) server.saveSettings(val);
+});
+
 export const alerts = writable([]);
 alerts.subscribe((a) => {
   if (a.length > 0) {
@@ -45,4 +51,5 @@ export default {
   page,
   course,
   alerts,
+  settings,
 };

@@ -6,6 +6,7 @@ const {
   getUser,
   permutation,
 } = require("./util");
+const { voice } = require("../voice");
 let path = "data";
 
 process.argv.forEach((line) => {
@@ -16,7 +17,7 @@ function readLanguage(path) {
   return fs
     .readFileSync(path, "utf-8")
     .split("\n")
-    .filter((v) => v.length > 0)
+    .filter((v) => v.trim().length > 0)
     .reduce((acc, val) => {
       if (!val.startsWith(" ")) {
         acc[val] = [];
@@ -34,9 +35,13 @@ function readLanguage(path) {
     }, {});
 }
 
-function generate(lang) {
+function generate(lang, blacklist = []) {
   let format = shuffle(lang.format)[0];
 
+  console.log(lang);
+  Object.keys(lang).forEach((key) => {
+    lang[key] = lang[key].filter((word) => blacklist.indexOf(word.rom) == -1);
+  });
   let dict = {};
   format = {
     jp: expandTemplate(format.jp, lang, dict).reduce(
@@ -74,7 +79,7 @@ function calcKnowledge(user, courseName) {
   return "poor";
 }
 let rest = {
-  words: (course, user) => {
+  words: async (course, user) => {
     return Object.keys(course.language)
       .filter((key) => key !== "format")
       .map((key) => course.language[key])
@@ -84,32 +89,38 @@ let rest = {
         ...user.words.find((w) => w.rom === word.rom),
       }));
   },
-  practice: (course, user) => {
-    let words = course.rest.words(course, user);
-    console.log(words);
-    return new Array(15)
+  practice: async (course, user) => {
+    let words = await course.rest.words(course, user);
+    let blacklist =
+      ((user.courses.find((c) => c.name === course.name) || {}).settings || {})
+        .blacklist || [];
+    let values = new Array(15)
       .fill(0)
-      .map((_) => generate(course.language))
+      .map((_) => generate(course.language, blacklist))
       .map((test) => {
         test.words = test.words.map((word) => ({
           ...word,
-          ...words.find((w) => w.rom === word.rom),
+          ...(words || []).find((w) => w.rom === word.rom),
         }));
-        return test;
+        return voice(test.jp, test.rom).then(() => {
+          return test;
+        });
       });
+    return Promise.all(values);
   },
-  updateUser: (_, user, results) => {
-    let course = user.courses.find(
-      (course) => course.name === "First grammar course"
-    );
+  updateUser: (inputCourse, user, results) => {
+    let course = user.courses.find((c) => c.name === inputCourse.name);
     if (!course) {
       course = {
-        name: "First grammar course",
+        name: inputCourse.name,
         progress: {
           practice: {
             pass: 0,
             attempts: 0,
           },
+        },
+        settings: {
+          blacklist: [],
         },
       };
       user.courses.push(course);
@@ -145,16 +156,20 @@ let rest = {
 
     return user;
   },
-  test: (course, user) => {
-    return course.rest.practice(course, user); //TODO: this sucks
-  },
 };
 let courses = (user) => [
   {
     name: "First grammar course",
-    description: "Learn basic grammar on the format {x is/was y}",
+    description: "Partikeln ha, desu-grejer, noun-kombination",
     knowledge: calcKnowledge(user, "First grammar course"),
     language: readLanguage(path + "/grammar1.lang"),
+    rest,
+  },
+  {
+    name: "Second grammar course",
+    description: "Advanced stuff",
+    knowledge: calcKnowledge(user, "Second grammar course"),
+    language: readLanguage(path + "/grammar2.lang"),
     rest,
   },
   {

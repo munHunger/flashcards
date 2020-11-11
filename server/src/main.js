@@ -8,9 +8,12 @@ let { katakana, katakanaWords } = require("./katakana");
 let courses = require("./courses");
 let serverPort = 5001;
 let monitoringPort = 4000;
+
+let voicePath = "data";
 process.argv.forEach((line) => {
   if (line.split("=")[0] === "monitoring") monitoringPort = line.split("=")[1];
   if (line.split("=")[0] === "server") serverPort = line.split("=")[1];
+  if (line.split("=")[0] === "voicePath") voicePath = line.split("=")[1];
 });
 
 monitoring.server(monitoringPort).then((monitoring) => {
@@ -18,6 +21,7 @@ monitoring.server(monitoringPort).then((monitoring) => {
   app.use(express.json());
 
   app.use("", express.static("node_modules/flash-client/public"));
+  app.use("/voice", express.static(`${voicePath}/voice`));
 
   courses.init(app);
 

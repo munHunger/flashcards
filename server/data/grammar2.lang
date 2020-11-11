@@ -1,0 +1,51 @@
+format
+    {x:NaAdj}な{y:Noun}です;{x}na {y} desu;A {x} {y}|An {x} {y}
+    {x:NaAdj}な{y:Noun}でした;{x}na {y} deshita;Was a {x} {y}|Was an {x} {y}
+    {x:NaAdj}な{y:Noun}ではありません;{x}na {y} de wa arimasen;A not {x} {y}
+    {x:NaAdj}な{y:Noun}ではありませんでした;{x}na {y} de wa arimasen deshita;Was not a {x} {y}|Was not an {x} {y}
+
+    {x:IAdj}い{y:Noun}です;{x}i {y} desu;A {x} {y}|An {x} {y}
+    {x:IAdj}くない{y:Noun}です;{x}kunai {y} desu;A not {x} {y}
+
+    {x:Noun}は{y:NaAdj}です;{x} wa {y} desu;{x} is {y}
+    {x:Noun}は{y:NaAdj}でした;{x} wa {y} deshita;{x} was {y}
+    {x:Noun}は{y:NaAdj}ではありません;{x} wa {y} de wa arimasen;{x} is not {y}
+    {x:Noun}は{y:NaAdj}ではありませんでした;{x} wa {y} de wa arimasen deshita;{x} was not {y}
+
+    {x:Noun}は{y:IAdj}いです;{x} wa {y}i desu;{x} is {y}
+    {x:Noun}は{y:IAdj}かったです;{x} wa {y}katta desu;{x} was {y}
+    {x:Noun}は{y:IAdj}くないです;{x} wa {y}kunai desu;{x} is not {y}
+    {x:Noun}は{y:IAdj}くなかったです;{x} wa {y}kunakatta desu;{x} was not {y}
+
+Noun
+    まくら;makura;pillow
+    ぎゅうにゅう;gyuunyuu;milk
+    たまご;tamago;egg
+    えいが;eiga;movie|film
+    しごと;shigoto;work|job
+    みず;mizu;water
+    き;ki;tree
+    ぞう;zou;statue|figure
+    おんがく;ongaku;music
+    じむしょ;jimusho;office
+    くるま;kuruma;car
+    じてんしゃ;jitensha;bicycle
+    はし;hashi;chopsticks
+
+IAdj
+    かわい;kawai;cute
+    たか;taka;expensive|tall
+    やす;yasu;cheap
+    ひど;hido;awful|cruel
+    おおき;ooki;big
+    つよ;tsuyo;strong
+    すご;sugo;amazing
+    うつくし;utsukushi;beautiful
+    やさし;yasashi;nice|easy
+
+NaAdj
+    なまいき;namaiki;cheeky
+    げんき;genki;healthy
+    おおきい;ookii;big
+
+    

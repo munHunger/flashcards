@@ -5,13 +5,30 @@
   function practice(course) {
     server.getCourseTest(course);
   }
+
+  function settings(course) {
+    server.getSettings(course.name);
+  }
 </script>
+
+<style>
+  .settings {
+    float: right;
+    color: #999;
+    cursor: pointer;
+  }
+</style>
 
 <div class="ui cards">
   {#each $courses || [] as course}
     <div class="card">
       <div class="content">
-        <div class="header">{course.name}</div>
+        <div class="header">
+          {course.name}
+          <div class="settings" on:click={() => settings(course)}>
+            <i class="cog icon" />
+          </div>
+        </div>
         {#if course.knowledge}
           <div class="meta">{course.knowledge}</div>
         {/if}

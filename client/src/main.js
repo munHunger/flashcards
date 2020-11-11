@@ -9,5 +9,5 @@ const app = new App({
 });
 
 import server from "./server";
-
+server.init();
 export default app;

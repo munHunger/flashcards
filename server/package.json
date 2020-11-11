@@ -2,7 +2,7 @@
   "name": "flash",
   "version": "1.0.0",
   "scripts": {
-    "dev": "nodemon src/main.js -- monitoring=4001 server=5002",
+    "dev": "nodemon src/main.js -- monitoring=4001 server=5002 voice=false",
     "start": "nodemon src/main.js"
   },
   "devDependencies": {
@@ -11,6 +11,7 @@
   "dependencies": {
     "express": "4.17.1",
     "flash-client": "file:../client",
-    "otto-lib": "0.0.1"
+    "otto-lib": "0.0.1",
+    "@google-cloud/text-to-speech": "3.1.1"
   }
 }

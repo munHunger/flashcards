@@ -1,6 +1,8 @@
 format
-    {x:Noun}は{y:Noun|IAdj|NaAdj}です;{x} wa {y} desu;{x} is {y}
-    {x:Noun}は{y:Noun|NaAdj}でした;{x} wa {y} deshita;{x} was {y}
+    {x:Noun}は{y:Noun}です;{x} wa {y} desu;{x} is {y}
+    {x:Noun}は{y:Noun}でした;{x} wa {y} deshita;{x} was {y}
+    {x:Noun}は{y:Noun}ではありません;{x} wa {y} de wa arimasen;{x} is not {y}
+    {x:Noun}は{y:Noun}ではありませんでした;{x} wa {y} de wa arimasen deshita;{x} was not {y}
 
 Noun
     いぬ;inu;dog
@@ -18,19 +20,3 @@ Noun
     ほんだな;hondana;bookcase
     でんしゃ;densha;train
     たてもの;tatemono;building
-
-IAdj
-    かわいい;kawaii;cute
-    たかい;takai;expensive|tall
-    やすい;yasui;cheap
-    ひどい;hidoi;awful|cruel
-    おおきい;ookii;big
-    つよい;tsuyoi;strong
-    すごい;sugoi;amazing
-    うつくしい;utsukushii;beautiful
-    やさしい;yasashii;nice|easy
-
-NaAdj
-    なまいき;namaiki;cheeky
-    げんき;genki;healthy
-    おおきい;ookii;big
