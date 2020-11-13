@@ -22,7 +22,23 @@ export function getCourseTest(course) {
     .then((res) => res.json())
     .then((res) =>
       data.course.set({
+        isExam: false,
         course: course.name,
+        questions: res,
+      })
+    );
+}
+
+export function getCourseExam(course) {
+  window
+    .fetch("/course/" + encodeURIComponent(course.name) + "/exam", {
+      headers: { username },
+    })
+    .then((res) => res.json())
+    .then((res) =>
+      data.course.set({
+        course: course.name,
+        isExam: true,
         questions: res,
       })
     );
@@ -92,4 +108,5 @@ export default {
   saveCourse,
   getSettings,
   saveSettings,
+  getCourseExam,
 };

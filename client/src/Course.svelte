@@ -167,8 +167,7 @@
   </div>
 
   <div class="actions">
-    <div class="ui two bottom attached buttons">
-      <div class="ui button">skip</div>
+    <div class="ui bottom attached">
       <div class="ui button" on:click={submitPressed}>
         {showAnswer ? 'next' : 'submit'}
       </div>

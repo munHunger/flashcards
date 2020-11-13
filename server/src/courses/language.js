@@ -146,6 +146,22 @@ let rest = {
       });
     return Promise.all(values);
   },
+  exam: async (course, user) => {
+    let words = await course.rest.words(course, user);
+    let values = new Array(30)
+      .fill(0)
+      .map((_) => generate(course.language, []))
+      .map((test) => {
+        test.words = test.words.map((word) => ({
+          ...word,
+          ...(words || []).find((w) => w.rom === word.rom),
+        }));
+        return voice(test.jp, test.rom).then(() => {
+          return test;
+        });
+      });
+    return Promise.all(values);
+  },
   updateUser: (inputCourse, user, results) => {
     let course = user.courses.find((c) => c.name === inputCourse.name);
     if (!course) {
@@ -167,6 +183,9 @@ let rest = {
     let success = results.filter((r) => r.success).length;
     course.progress.practice.pass += success / results.length >= 0.75 ? 1 : 0;
     course.progress.practice.attempts += 1;
+    if(inputCourse.isExam && success / results.length >= 0.85) {
+      course.completed = true;
+    }
 
     results.forEach((res) => {
       res.words.forEach((word) => {

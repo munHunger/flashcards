@@ -6,6 +6,10 @@
     server.getCourseTest(course);
   }
 
+  function exam(course) {
+    server.getCourseExam(course);
+  }
+
   function settings(course) {
     server.getSettings(course.name);
   }
@@ -39,7 +43,9 @@
           <div class="ui basic green button" on:click={() => practice(course)}>
             Practice
           </div>
-          <div class="ui basic orange button">Exam</div>
+          <div class="ui basic orange button" on:click={() => exam(course)}>
+            Exam
+          </div>
         </div>
       </div>
     </div>
