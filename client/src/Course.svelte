@@ -1,15 +1,36 @@
 <script>
+  import Order from "./Order.svelte";
   import { course, sendAlert } from "./data";
   import server from "./server";
   let currentIndex = 0;
 
   let currentTime, paused;
 
-  let isWritingPrompt = true;
+  $: isNewOrHard =
+    currentIndex >= $course.questions.length ||
+    $course.questions[currentIndex].words.every(
+      word =>
+        !word.progress ||
+        word.progress.hiragana.pass / word.progress.hiragana.attempts < 0.5
+    );
+
+  $: isWritingPrompt =
+    currentIndex >= $course.questions.length ||
+    $course.questions[currentIndex].words.every(
+      word =>
+        word.progress &&
+        word.progress.hiragana.pass / word.progress.hiragana.attempts > 0.5
+    );
+    
   let input = "";
   let jpToRom = Math.random() > 0.5;
 
   let showAnswer = false;
+  let ordering;
+
+  function handleKeyDown(e) {
+    if (e.code === "Enter") submitPressed();
+  }
 
   function submitPressed() {
     if (showAnswer) next();
@@ -18,7 +39,10 @@
   function submit() {
     showAnswer = true;
     let correct = false;
-    if (jpToRom) {
+    if (ordering) {
+      input = ordering.getValue();
+      correct = input === $course.questions[currentIndex].jp;
+    } else if (jpToRom) {
       correct =
         $course.questions[currentIndex].translations
           .map(t => t.toLowerCase())
@@ -84,8 +108,14 @@
     font-size: 0.7rem;
     color: #666;
   }
+  .infobox {
+    position: absolute;
+    left: 1rem;
+    top: 1rem;
+  }
 </style>
 
+<svelte:window on:keydown={handleKeyDown} />
 {#if $course}
   <div class="progress">{currentIndex}/{$course.questions.length}</div>
   <div class="ui centered grid">
@@ -96,7 +126,14 @@
       src="/voice/{$course.questions[currentIndex].rom}.mp3">
       <track kind="captions" />
     </audio>
-
+    {#if $course.questions[currentIndex].info.length > 0 && isNewOrHard}
+      <div class="infobox">
+        <div class="ui icon circular basic button">
+          <i class="info icon" />
+          {$course.questions[currentIndex].info}
+        </div>
+      </div>
+    {/if}
     {#if showAnswer}
       <div class="ui row">
         <h3 class="ui header">{$course.questions[currentIndex].jp}</h3>
@@ -113,24 +150,28 @@
           {:else}{$course.questions[currentIndex].translations.join(', ')}{/if}
         </h2>
       </div>
-      <div class="ui row transparent input">
-        <input
-          type="text"
-          class="center input"
-          placeholder="answer"
-          bind:value={input} />
-      </div>
+      {#if isWritingPrompt}
+        <div class="ui row transparent input">
+          <input
+            type="text"
+            class="center input"
+            placeholder="answer"
+            bind:value={input} />
+        </div>
+      {:else}
+        <Order
+          options={$course.questions[currentIndex].wordOptions}
+          bind:this={ordering} />
+      {/if}
     {/if}
   </div>
 
   <div class="actions">
     <div class="ui two bottom attached buttons">
       <div class="ui button">skip</div>
-      {#if isWritingPrompt}
-        <div class="ui button" on:click={submitPressed}>
-          {showAnswer ? 'next' : 'submit'}
-        </div>
-      {/if}
+      <div class="ui button" on:click={submitPressed}>
+        {showAnswer ? 'next' : 'submit'}
+      </div>
     </div>
   </div>
 {/if}

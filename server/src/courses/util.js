@@ -73,4 +73,14 @@ function saveUser(user) {
   fs.writeFileSync(path, JSON.stringify(user, null, 2), "utf-8");
 }
 
-module.exports = { shuffle, expandTemplate, getUser, saveUser, permutation };
+function unique(list) {
+  return [...new Set(list)]
+}
+
+function requireOptions(options, list) {
+  let missing = options.filter(op => list.indexOf(op) === -1)
+  let length = list.length;
+  return missing.concat(list).slice(0, Math.max(length, options.length));
+}
+
+module.exports = { shuffle, expandTemplate, getUser, saveUser, permutation, unique, requireOptions };

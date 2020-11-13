@@ -5,6 +5,8 @@ const {
   saveUser,
   getUser,
   permutation,
+  unique,
+  requireOptions,
 } = require("./util");
 const { voice } = require("../voice");
 let path = "data";
@@ -19,9 +21,10 @@ function readLanguage(path) {
     .split("\n")
     .filter((v) => v.trim().length > 0)
     .reduce((acc, val) => {
-      if (!val.startsWith(" ")) {
+      var count = (val.match(/    /g) || []).length;
+      if (count === 0) {
         acc[val] = [];
-      } else {
+      } else if (count === 1) {
         let keys = Object.keys(acc);
         let key = keys[keys.length - 1];
         let parts = val.trim().split(";");
@@ -30,6 +33,10 @@ function readLanguage(path) {
           rom: parts[1],
           translations: parts[2].split("|"),
         });
+      } else if (count === 2) {
+        let keys = Object.keys(acc);
+        let key = keys[keys.length - 1];
+        acc[key][acc[key].length - 1].info = val.trim();
       }
       return acc;
     }, {});
@@ -38,7 +45,6 @@ function readLanguage(path) {
 function generate(lang, blacklist = []) {
   let format = shuffle(lang.format)[0];
 
-  console.log(lang);
   Object.keys(lang).forEach((key) => {
     lang[key] = lang[key].filter((word) => blacklist.indexOf(word.rom) == -1);
   });
@@ -47,6 +53,33 @@ function generate(lang, blacklist = []) {
     jp: expandTemplate(format.jp, lang, dict).reduce(
       (acc, val) => acc + (val.jp || val),
       ""
+    ),
+    wordOptions: shuffle(
+      requireOptions(
+        [
+          ...Object.values(dict).map((val) => val.jp),
+          ...expandTemplate(format.jp, lang, dict).filter(
+            (part) => typeof part === "string"
+          ).filter(v => v.length > 0),
+        ],
+        shuffle(
+          unique(
+            lang.format
+              .map((format) =>
+                expandTemplate(format.jp, lang, dict).filter(
+                  (w) => typeof w === "string"
+                )
+              )
+              .concat(
+                Object.keys(lang)
+                  .filter((key) => key !== "format")
+                  .map((key) => lang[key].map((word) => word.jp))
+              )
+              .reduce((acc, val) => acc.concat(val), [])
+              .filter((v) => v.length > 0)
+          )
+        ).slice(0, 12)
+      )
     ),
     rom: expandTemplate(format.rom, lang, dict).reduce(
       (acc, val) => acc + (val.rom || val),
@@ -63,10 +96,15 @@ function generate(lang, blacklist = []) {
         )
         .reduce((acc, val) => acc.concat(val), [])
     ),
+    info: expandTemplate(format.info || "", lang, dict).reduce(
+      (acc, val) => acc + ((val.translations || [])[0] || val),
+      ""
+    ),
     words: Object.values(dict),
   };
   return format;
 }
+console.log(generate(readLanguage("data/grammar2.lang")));
 
 function calcKnowledge(user, courseName) {
   let progress = (

@@ -1,18 +1,28 @@
 format
     {x:NaAdj}な{y:Noun}です;{x}na {y} desu;A {x} {y}|An {x} {y}
+        NaAdj does not need a the 'wa' particle 
     {x:NaAdj}な{y:Noun}でした;{x}na {y} deshita;Was a {x} {y}|Was an {x} {y}
+        NaAdj does not need a the 'wa' particle
     {x:NaAdj}な{y:Noun}ではありません;{x}na {y} de wa arimasen;A not {x} {y}
+        NaAdj does not need a the 'wa' particle
     {x:NaAdj}な{y:Noun}ではありませんでした;{x}na {y} de wa arimasen deshita;Was not a {x} {y}|Was not an {x} {y}
+        NaAdj does not need a the 'wa' particle
 
     {x:IAdj}い{y:Noun}です;{x}i {y} desu;A {x} {y}|An {x} {y}
+        normal format
     {x:IAdj}くない{y:Noun}です;{x}kunai {y} desu;A not {x} {y}
-
+        IAdj will have a different conjugation when it is on a negative format
     {x:Noun}は{y:NaAdj}です;{x} wa {y} desu;{x} is {y}
+        NaAdj needs the 'wa' particle when describing what something is
     {x:Noun}は{y:NaAdj}でした;{x} wa {y} deshita;{x} was {y}
+        NaAdj needs the 'wa' particle when describing what something is
     {x:Noun}は{y:NaAdj}ではありません;{x} wa {y} de wa arimasen;{x} is not {y}
+        NaAdj needs the 'wa' particle when describing what something is
     {x:Noun}は{y:NaAdj}ではありませんでした;{x} wa {y} de wa arimasen deshita;{x} was not {y}
+        NaAdj needs the 'wa' particle when describing what something is
 
     {x:Noun}は{y:IAdj}いです;{x} wa {y}i desu;{x} is {y}
+        normal format
     {x:Noun}は{y:IAdj}かったです;{x} wa {y}katta desu;{x} was {y}
     {x:Noun}は{y:IAdj}くないです;{x} wa {y}kunai desu;{x} is not {y}
     {x:Noun}は{y:IAdj}くなかったです;{x} wa {y}kunakatta desu;{x} was not {y}
