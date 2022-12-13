@@ -9,7 +9,7 @@
     "nodemon": "2.0.4"
   },
   "dependencies": {
-    "express": "4.17.1",
+    "express": "4.17.3",
     "flash-client": "file:../client",
     "otto-lib": "0.0.1",
     "@google-cloud/text-to-speech": "3.1.1"
